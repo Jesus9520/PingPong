@@ -12,7 +12,7 @@
 /* Creamos un objeto JSON para declarar diferentes funciones o métodos para el prototype y agregamos la pelota*/
        self.Board.prototype ={
        get elements(){
-           var elements = this.bars;
+           var elements = this.bars.map(function (bar) {  return bar;});
            elements.push(this.ball);
            return elements;
 
@@ -41,8 +41,12 @@
           };
        },
        play: function(){
+        if(this.board.playing){
         this.clean();
         this.draw();
+        this.board.ball.move();    
+        }
+       
 
        }
     }
@@ -75,8 +79,14 @@
         this.board = board; 
         board.ball = this;
         this.kind = "circle"  
-    }
+        this.direction = 1;
 
+    }//Creamos el método para darle movimeinto a la pelota del PingPong
+        self.ball.prototype = {
+            move: function () {
+                this.x += (this.speed_x * this.direction);
+                this.y += (this.speed_y );
+            }}
 })();
 
 (function () {
@@ -135,8 +145,15 @@ document.addEventListener("keydown",function (ev){
      }else if(ev.keyCode === 83){
          //s
         bar_2.down(); 
-     }
+     }else if(ev.keyCode === 32){
+        ev.preventDefault();
+        board.playing = !board.playing;
+ 
+      }
 });
+
+
+board_view.draw();
 /*animación de la barras*/
 window.requestAnimationFrame(controller);
 /*Creamos un nuevo método que se llame PLAY*/
